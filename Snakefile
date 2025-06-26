@@ -17,7 +17,7 @@ segments = ["spike", "nucleocapsid", "envelope", "membrane", "whole_genome"] # T
 rule all:
     input:
         #augur_jsons = expand("auspice/HCoV_229E_{segs}.json", segs=segments) ## TODO: replace <your_virus> with actual virus name (Ctrl+H)
-        augur_jsons = expand("auspice/HCoV_229E_{segs}-accession.json", segs=segments) ## TODO: replace <your_virus> with actual virus name (Ctrl+H)
+        augur_jsons = expand("auspice/HCoV_229E_{segs}.json", segs=segments) ## TODO: replace <your_virus> with actual virus name (Ctrl+H)
 
 ##############################
 # Rule to handle input and config files
@@ -27,14 +27,16 @@ rule files:
     input:
         sequence_length =   "{seg}",
         dropped_strains =   "config/dropped_strains.txt",
-        reference =         "ingest/data/references/229e_full_reference.gb"    ,
+        reference =         "ingest/data/references/reference.gbk"    ,
         lat_longs =         "config/lat_longs.tsv",
         auspice_config =    "{seg}/config/auspice_config.json",
         colors =            "config/colors.tsv",
         clades =            "{seg}/config/clades_genome.tsv",
+        published_clades =  "config/published_clades.xlsx",
         regions=            "config/geo_regions.tsv",
         metadata=           "data/metadata.tsv",
-        extended_metafile=  "data/meta_manual.tsv",  ###TODO: Add an empty tsv file to this path or metadata for one of your sequences
+        updated_dates = "data/updated_dates.xlsx",
+        
 
 files = rules.files.input
 
@@ -90,7 +92,26 @@ rule update_strain_names:
         time bash scripts/update_strain.sh {input.file_in} {params.backup} {output.file_out}
         """
 
+rule update_metadata:
+    message: 
+        """
+        Merging metadata from publicly available sequences with metadata from unpublished sequences"
+        """
+    input: 
+        public = files.metadata,
+        published_clades = files.published_clades,
+        updated_dates = files.updated_dates
+    output:
+        final_metadata = "results/final_metadata.tsv"
+    shell:
+        """
+       python scripts/merge_tsv.py \
+       --inputfile1 {input.public}\
+       --inputfile2 {input.published_clades} \
+       --inputfile3 {input.updated_dates} \
+       --outputfile {output.final_metadata}
 
+        """    
 
 ##############################
 # BLAST
@@ -102,7 +123,8 @@ rule extract:
     input: 
         genbank_file = files.reference
     output: 
-        extracted_fasta = "{seg}/results/extracted.fasta"    
+        extracted_fasta = "{seg}/results/extracted.fasta",    
+        extracted_genbank = "{seg}/results/extracted.gbk" 
     params:
         product_name = "{seg}"
     shell:
@@ -110,7 +132,8 @@ rule extract:
         python scripts/extract_gene_from_whole_genome.py \
         --genbank_file {input.genbank_file} \
         --output_fasta {output.extracted_fasta} \
-        --product_name {params.product_name}
+        --product_name {params.product_name} \
+        --output_genbank {output.extracted_genbank}
 
         """
 
@@ -120,9 +143,9 @@ rule blast:
         blast_db_file = rules.extract.output.extracted_fasta,  # Provide a BLAST reference
         seqs_to_blast = rules.fetch.output.sequences
     output:
-        blast_out = "temp/{seg}/blast_out.csv"
+        blast_out = "{seg}/results/blast_out.csv"
     params:
-        blast_db = "temp/{seg}/blast_database"
+        blast_db = "{seg}/results/blast_database"
     shell:
         """
         sed -i 's/-//g' {input.seqs_to_blast}
@@ -133,7 +156,6 @@ rule blast:
             -out {output.blast_out} -evalue 0.0005
         """
 
-
 rule blast_sort:
     input:
         blast_result = rules.blast.output.blast_out,  # BLAST output for specific proteins
@@ -143,8 +165,8 @@ rule blast_sort:
         blast_length= "{seg}/results/blast_{seg}_length.tsv"
     params:
         range = "{seg}",  # Determines which protein (or whole genome) is processed
-        min_length = lambda wildcards: {"spike": 2113, "nucleocapsid": 701, "envelope": 140, "membrane": 406, "whole_genome": 16400}[wildcards.seg],  # Min length 
-        max_length = lambda wildcards: {"spike": 3600, "nucleocapsid": 1169, "envelope": 233, "membrane": 677, "whole_genome": 27400}[wildcards.seg]  # Max length added 50-100 to actual length
+        min_length = lambda wildcards: {"spike": 2113, "nucleocapsid": 701, "envelope": 139, "membrane": 406, "whole_genome": 16400}[wildcards.seg],  # Min length 
+        max_length = lambda wildcards: {"spike": 3600, "nucleocapsid": 1169, "envelope": 240, "membrane": 677, "whole_genome": 27400}[wildcards.seg]  # Max length added 50-100 to actual length
     shell:
         """
         python scripts/blast_sort.py --blast {input.blast_result} \
@@ -157,8 +179,6 @@ rule blast_sort:
 
         
         """
-# snakemake -c 9 "temp/nucleocapsid/blast_out.csv" -f
-# snakemake -c 9 nucleocapsid/results/sequences.fasta
 
 ##############################
 # AUGUR CURATE AND MERGE
@@ -167,48 +187,6 @@ rule blast_sort:
 # Merge with other metadata files you might have
 
 ###############################
-
-# rule curate_meta_dates:
-#     message:
-#         """
-#         Cleaning up metadata with augur curate and merge your metadata with the one from ingest
-#         """
-#     input:
-#         meta = files.metadata,
-#         blast_length = rules.blast_sort.output.blast_length, 
-#     params:
-#         strain_id_field = "accession",
-#         sorted_meta_accessions = "temp/{seg}/meta_accessions.txt",
-#         sorted_blast_length_accessions = "temp/{seg}/blast_accessions.txt",
-#         common_accessions = "temp/{seg}/common_accessions.txt",
-    
-#     output:
-#         final_metadata = "{seg}/results/metadata.tsv",
-#         filtered_meta = "{seg}/results/filtered_metadata.tsv",
-#         filtered_blast_length = "{seg}/results/filtered_blast_length.tsv"
-#     shell:
-#         """
-    
-#         #Preventing Augur merge sqlite right/full join error 
-#         cut -f1 {input.meta} | sort > {params.sorted_meta_accessions}
-#         cut -f1 {input.blast_length} | sort > {params.sorted_blast_length_accessions}
-#         comm -12 {params.sorted_meta_accessions} {params.sorted_blast_length_accessions} > {params.common_accessions}
-#         (grep -Ff {params.common_accessions} {input.meta}) > {output.filtered_meta}
-#         ( grep -Ff {params.common_accessions} {input.blast_length}) > {output.filtered_blast_length}
-#         sort -k1,1 {output.filtered_meta} > {output.filtered_meta}
-#         sort -k1,1 {output.filtered_blast_length} > {output.filtered_blast_length}
-
-
-
-#         # Merge curated metadata
-#         # augur merge --metadata meta={output.filtered_meta} extended_meta={output.filtered_blast_length} \
-#         #     --metadata-id-columns {params.strain_id_field} \
-#         #     --metadata-delimiters '\t' \
-#         #     --output-metadata {output.final_metadata}
-
-#         paste {output.filtered_meta} {output.filtered_blast_length} > {output.final_metadata}
-#         """
-###########################################################
 
 rule index_sequences:
     message:
@@ -237,17 +215,19 @@ rule filter:
           - excluding strains in {input.exclude}
         """
     input:
-        sequences = rules.fetch.output.sequences,
+        sequences = rules.blast_sort.output.sequences,
         sequence_index = rules.index_sequences.output.sequence_index,
         # metadata = rules.curate_meta_dates.output.final_metadata,
-        metadata = files.metadata,
+        metadata = rules.update_metadata.output.final_metadata,
         exclude = files.dropped_strains
     output:
-        sequences = "{seg}/results/filtered.fasta"
+        sequences = "{seg}/results/filtered.fasta",
+        metadata = "{seg}/results/filtered_metadata.tsv",
+        log = "{seg}/results/output_log.tsv"
     params:
         #group_by = "country year month", --group-by {params.group_by} \
         #sequences_per_group = 20,  --sequences-per-group {params.sequences_per_group} \
-        min_date = 1960, #Set to 1960, as this was when HCoV first discovered, but 229E 2004
+        min_date = 1960, #Set to 1960, as this was when HCoV first discovered, but NL63 2004
         strain_id_field= "accession",
         #min_length = 20000 #--min-length {params.min_length}
         
@@ -260,7 +240,10 @@ rule filter:
             --metadata {input.metadata} \
             --metadata-id-columns {params.strain_id_field} \
             --exclude {input.exclude} \
-            --output {output.sequences} \
+            --exclude-ambiguous-dates-by year \
+            --output-sequences {output.sequences} \
+            --output-metadata {output.metadata} \
+            --output-log {output.log} \
             --min-date {params.min_date} \
             
         """
@@ -269,21 +252,6 @@ rule filter:
 #Nextclade needs the reference in fasta format, whereas Augur prefers the .gb format
 ###########################
 
-rule reference_gb_to_fasta:
-    message:
-        """
-        Converting reference sequence from genbank to fasta format and putting it in the reference folders of your proteins
-        """
-    input:
-        reference = files.reference
-
-    output:
-        reference = "{seg}/results/reference_sequence.fasta"
-    run:
-        from Bio import SeqIO 
-        SeqIO.convert(input.reference, "genbank", output.reference, "fasta")
-
-
 rule align:
     message:
             """
@@ -291,9 +259,11 @@ rule align:
             """
     input:
         sequences = rules.filter.output.sequences,
-        reference = rules.reference_gb_to_fasta.output.reference
+        reference = rules.extract.output.extracted_fasta
     output:
-        alignment = "{seg}/results/aligned.fasta"
+        alignment = "{seg}/results/aligned.fasta",
+        tsv = "{seg}/results/aligned.tsv"
+
 
     params:
             nuc_mismatch_all = 10,
@@ -306,7 +276,9 @@ rule align:
         --allowed-mismatches {params.nuc_mismatch_all} \
         --min-length {params.nuc_seed_length} \
         --include-reference false \
-        --output-fasta {output.alignment} 
+        --retry-reverse-complement true \
+        --output-fasta {output.alignment} \
+        --output-tsv {output.tsv}
         """
 
 ##############################
@@ -349,9 +321,7 @@ rule refine:
     input:
         tree = rules.tree.output.tree,
         alignment = rules.align.output.alignment,
-        # metadata = rules.curate_meta_dates.output.final_metadata,
-        metadata = files.metadata,
-        reference = files.reference
+        metadata = rules.filter.output.metadata
     output:
         tree = "{seg}/results/tree.nwk",
         node_data = "{seg}/results/branch_lengths.json"
@@ -360,8 +330,8 @@ rule refine:
         date_inference = "marginal",
         clock_filter_iqd = 3, # set to 6 if you want more control over outliers
         strain_id_field ="accession",
-        clock_rate = 0.004, # remove for estimation by augur; check literature
-        clock_std_dev = 0.0015
+        #clock_rate = 0.000120, # remove for estimation by augur; check literature
+        #clock_std_dev = 0.00005
 
     shell:
         """
@@ -375,12 +345,13 @@ rule refine:
             --timetree \
             --coalescent {params.coalescent} \
             --date-confidence \
-            --clock-rate {params.clock_rate}\
-            --clock-std-dev {params.clock_std_dev} \
             --date-inference {params.date_inference} \
-            --clock-filter-iqd {params.clock_filter_iqd}
+            --clock-filter-iqd {params.clock_filter_iqd}\
+            --stochastic-resolve
         """
-
+#--clock-rate {params.clock_rate} \
+            #--clock-std-dev {params.clock_std_dev} \
+            
 # ##############################
 # # Ancestral sequences and amino acids
 # ###############################
@@ -411,7 +382,7 @@ rule translate:
     input:
         tree = rules.refine.output.tree,
         node_data = rules.ancestral.output.node_data,
-        reference = files.reference
+        reference = rules.extract.output.extracted_genbank
     output:
         node_data = "{seg}/results/aa_muts.json"
 
@@ -428,8 +399,7 @@ rule traits:
     message: "Inferring ancestral traits for {params.traits!s}"
     input:
         tree = rules.refine.output.tree,
-        # metadata =rules.curate_meta_dates.output.final_metadata
-        metadata = files.metadata
+        metadata = rules.filter.output.metadata
     output:
         node_data = "{seg}/results/traits.json"
         
@@ -475,8 +445,7 @@ rule export:
     message: "Creating auspice JSONs"
     input:
         tree = rules.refine.output.tree,
-        # metadata = rules.curate_meta_dates.output.final_metadata,
-        metadata = files.metadata,
+        metadata = rules.filter.output.metadata,
         branch_lengths = rules.refine.output.node_data,
         traits = rules.traits.output.node_data,
         nt_muts = rules.ancestral.output.node_data,
@@ -489,7 +458,7 @@ rule export:
         strain_id_field= "accession"
 
     output:
-        auspice_json = "auspice/HCoV_229E_{seg}-accession.json"
+        auspice_json = "auspice/HCoV_229E_{seg}.json"
         
     shell:
         """
@@ -504,7 +473,6 @@ rule export:
             --auspice-config {input.auspice_config} \
             --output {output.auspice_json}
         """
-        
 # ###############################
 # # Change from accession to strain name view in tree
 # ################################

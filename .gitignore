@@ -10,7 +10,8 @@ ingest/logs/
 
 
 
-*/results/*
+*/results/
+results/
 */temp/
 
 ingest/data/*
@@ -24,3 +25,5 @@ scripts/__pycache__/
 scripts/bin
 
 .env
+
+config/~$published_clades.xlsx

@@ -1,7 +1,8 @@
 {
     "title": "Genomic Epidemiology of Human coronavirus 229E ",
     "maintainers": [
-      {"name": "Nosihle Msomi", "url": "https://www.swisstph.ch/en/staff/profile/people/nosihle-msomi"}
+      {"name": "Nosihle Msomi", "url": "https://www.swisstph.ch/en/staff/profile/people/nosihle-msomi"}, 
+      {"name": "Emma Hodcroft", "url": "https://www.swisstph.ch/en/staff/profile/people/emma-hodcroft"}
     ],
     "build_url": "https://github.com/hodcroftlab/Seasonal_Coronaviruses",
     "colorings": [
@@ -31,6 +32,11 @@
         "type": "categorical"
       },
       {
+        "key": "published_clade",
+        "title": "Published Clades",
+        "type": "categorical"
+      },
+      {
         "key": "length",
         "title": " Blast Sequence length",
         "type": "continuous"
@@ -52,6 +58,7 @@
       "country",
       "region",
       "author",
+      "published_clade"
   
     ]
   }
