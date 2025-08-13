@@ -17,7 +17,7 @@
 
 OY757560 #Rat 
 
-#under diverged? 
+#under diverged
 
 #ON461751
 #ON554107
@@ -25,3 +25,14 @@ OY757560 #Rat
 #PQ616076
 #PQ963851
 #MH828489
+
+#RNA lab control strains from lab cultures 
+
+MBC090 #Amplirun coronavirus RNA control
+PP810610 #Amplirun coronavirus RNA control
+OK625404  # ATCC VR-740 strain 
+MZ712010 # plasmid DNA from Korean bank for pathogenic viruses
+PQ243243 #archived clinical sample propagated in lab for assays 
+PP914108 #unverified
+OK662398 #propagated in Huh-7 cells in Helsink/Turku group paper 
+OK662397 #propagated in Huh-7 cells in Helsink/Turku group paper 
