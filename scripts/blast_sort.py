@@ -33,7 +33,7 @@ def main():
     selected_seqs = []
     
     # Process sequences based on the specified length range
-    if args.range != "whole_genome":
+    if args.range != "whole-genome":
         blast_results = blast_results[(blast_results.diff_length_ref >= length_range[0]) & (blast_results.diff_length_ref <= length_range[1])]
         # wantToAdd = 0
         # added = 0

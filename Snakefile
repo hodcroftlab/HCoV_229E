@@ -8,10 +8,10 @@
 
 ###############
 wildcard_constraints:
-    seg="spike|nucleocapsid|envelope|membrane|whole_genome"  
+    seg="spike|nucleocapsid|envelope|membrane|whole-genome"  
 
 # Define segments to analyze
-segments = ["spike", "nucleocapsid", "envelope", "membrane", "whole_genome"] # This is only for the expand in rule all
+segments = ["spike", "nucleocapsid", "envelope", "membrane", "whole-genome"] # This is only for the expand in rule all
 
 # Expand augur JSON paths
 rule all:
@@ -165,8 +165,8 @@ rule blast_sort:
         blast_length= "{seg}/results/blast_{seg}_length.tsv"
     params:
         range = "{seg}",  # Determines which protein (or whole genome) is processed
-        min_length = lambda wildcards: {"spike": 2113, "nucleocapsid": 701, "envelope": 139, "membrane": 406, "whole_genome": 16400}[wildcards.seg],  # Min length 
-        max_length = lambda wildcards: {"spike": 3600, "nucleocapsid": 1175, "envelope": 240, "membrane": 700, "whole_genome": 27400}[wildcards.seg]  # Max length added 50-100 to actual length
+        min_length = lambda wildcards: {"spike": 2113, "nucleocapsid": 701, "envelope": 139, "membrane": 406, "whole-genome": 16400}[wildcards.seg],  # Min length 
+        max_length = lambda wildcards: {"spike": 3600, "nucleocapsid": 1175, "envelope": 240, "membrane": 700, "whole-genome": 27400}[wildcards.seg]  # Max length added 50-100 to actual length
     shell:
         """
         python scripts/blast_sort.py --blast {input.blast_result} \
