@@ -1,1 +1,27 @@
 #Listed in this file are sequences which have been excluded from the analysis due to reasons listed below
+
+#Ghana, Kenya, Tanzania - bring back later 
+
+#KT253269
+#KT253266
+#KT253270
+#KT253271
+
+
+#removal of these african strains drops middle eastern completley 
+#they seem to form their own separate clades 
+
+#PP810610
+#MZ712010 
+#OK625404
+
+OY757560 #Rat 
+
+#under diverged? 
+
+#ON461751
+#ON554107
+#MF542265
+#PQ616076
+#PQ963851
+#MH828489

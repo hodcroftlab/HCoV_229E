@@ -35,6 +35,8 @@ def main():
     # Process sequences based on the specified length range
     if args.range != "whole_genome":
         blast_results = blast_results[(blast_results.diff_length_ref >= length_range[0]) & (blast_results.diff_length_ref <= length_range[1])]
+        # wantToAdd = 0
+        # added = 0
         
         for seq_record in sequences:
             if seq_record.id in blast_results.qseqid.unique():
@@ -45,13 +47,17 @@ def main():
                 # Create new sequence record
                 new_seq_record = seq_record[:0]  # Copy metadata
                 new_seq_record.seq = reg_seq
+                # wantToAdd += 1
                 if length_range[0] <= len(reg_seq) <= length_range[1]:
                     selected_seqs.append(new_seq_record)
+                    # added += 1
     else:
         for seq_record in sequences:
             seq_length = len(seq_record.seq)
             if length_range[0] <= seq_length <= length_range[1]:
                 selected_seqs.append(seq_record)
+                
+    # print(f"wanted to add {wantToAdd} sequences, added {added} sequences")
 
     # Write selected sequences
     SeqIO.write(selected_seqs, args.out_seqs, "fasta")

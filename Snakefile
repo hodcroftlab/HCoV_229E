@@ -166,7 +166,7 @@ rule blast_sort:
     params:
         range = "{seg}",  # Determines which protein (or whole genome) is processed
         min_length = lambda wildcards: {"spike": 2113, "nucleocapsid": 701, "envelope": 139, "membrane": 406, "whole_genome": 16400}[wildcards.seg],  # Min length 
-        max_length = lambda wildcards: {"spike": 3600, "nucleocapsid": 1169, "envelope": 240, "membrane": 677, "whole_genome": 27400}[wildcards.seg]  # Max length added 50-100 to actual length
+        max_length = lambda wildcards: {"spike": 3600, "nucleocapsid": 1175, "envelope": 240, "membrane": 700, "whole_genome": 27400}[wildcards.seg]  # Max length added 50-100 to actual length
     shell:
         """
         python scripts/blast_sort.py --blast {input.blast_result} \
@@ -229,6 +229,7 @@ rule filter:
         #sequences_per_group = 20,  --sequences-per-group {params.sequences_per_group} \
         min_date = 1960, #Set to 1960, as this was when HCoV first discovered, but NL63 2004
         strain_id_field= "accession",
+        exclude = "'host!=Homo sapiens'"
         #min_length = 20000 #--min-length {params.min_length}
         
     #conda: "ingest/workflow/envs/nextstrain.yaml"
@@ -245,6 +246,7 @@ rule filter:
             --output-metadata {output.metadata} \
             --output-log {output.log} \
             --min-date {params.min_date} \
+            --exclude-where {params.exclude}
             
         """
 
