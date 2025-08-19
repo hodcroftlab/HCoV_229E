@@ -1,6 +1,6 @@
 #Listed in this file are sequences which have been excluded from the analysis due to reasons listed below
 
-#Ghana, Kenya, Tanzania - bring back later 
+#Ghana, Kenya, Tanzania - bat coronavirus isolates 
 
 #KT253269
 #KT253266
@@ -16,8 +16,6 @@
 #OK625404
 
 OY757560 #Rat 
-
-#under diverged
 
 #ON461751
 #ON554107
@@ -36,3 +34,4 @@ PQ243243 #archived clinical sample propagated in lab for assays
 PP914108 #unverified
 OK662398 #propagated in Huh-7 cells in Helsink/Turku group paper 
 OK662397 #propagated in Huh-7 cells in Helsink/Turku group paper 
+PQ616082 #cell culture
