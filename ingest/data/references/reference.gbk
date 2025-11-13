@@ -1,102 +1,217 @@
-LOCUS       AF304460               27317 bp    RNA     linear   VRL 11-JUL-2001
+LOCUS       NC_002645              27317 bp    ss-RNA  linear   VRL 17-AUG-2021
 DEFINITION  Human coronavirus 229E, complete genome.
-ACCESSION   AF304460
-VERSION     AF304460.1
-KEYWORDS    .
+ACCESSION   NC_002645
+VERSION     NC_002645.1
+DBLINK      BioProject: PRJNA485481
+KEYWORDS    RefSeq.
 SOURCE      Human coronavirus 229E
   ORGANISM  Human coronavirus 229E
             Viruses; Riboviria; Orthornavirae; Pisuviricota; Pisoniviricetes;
             Nidovirales; Cornidovirineae; Coronaviridae; Orthocoronavirinae;
             Alphacoronavirus; Duvinacovirus; Alphacoronavirus chicagoense.
 REFERENCE   1  (bases 1 to 27317)
+  AUTHORS   Ziebuhr,J., Thiel,V. and Gorbalenya,A.E.
+  TITLE     The autocatalytic release of a putative RNA virus transcription
+            factor from its polyprotein precursor involves two paralogous
+            papain-like proteases that cleave the same peptide bond
+  JOURNAL   J. Biol. Chem. 276 (35), 33220-33232 (2001)
+   PUBMED   11431476
+REFERENCE   2  (bases 1 to 27317)
   AUTHORS   Thiel,V., Herold,J., Schelle,B. and Siddell,S.G.
   TITLE     Infectious RNA transcribed in vitro from a cDNA copy of the human
             coronavirus genome cloned in vaccinia virus
   JOURNAL   J. Gen. Virol. 82 (Pt 6), 1273-1281 (2001)
    PUBMED   11369870
-REFERENCE   2  (bases 1 to 27317)
+REFERENCE   3  (bases 1 to 27317)
   AUTHORS   Thiel,V., Herold,J. and Siddell,S.G.
   TITLE     Direct Submission
   JOURNAL   Submitted (11-SEP-2000) Virology, University of Wuerzburg,
             Versbacherstr.7, Wuerzburg 97078, Germany
+REFERENCE   4  (bases 1 to 27317)
+  CONSRTM   NCBI Genome Project
+  TITLE     Direct Submission
+  JOURNAL   Submitted (01-AUG-2000) National Center for Biotechnology
+            Information, NIH, Bethesda, MD 20894, USA
+COMMENT     REVIEWED REFSEQ: This record has been curated by NCBI staff. The
+            reference sequence was derived from AF304460.
+            The mature peptides were added to the annotation at the NCBI.
+            COMPLETENESS: full length.
 FEATURES             Location/Qualifiers
      source          1..27317
                      /organism="Human coronavirus 229E"
                      /mol_type="genomic RNA"
-                     /strain="229E"
                      /db_xref="taxon:11137"
                      /clone="inf-1"
-     CDS             join(293..12520,12520..20568)
-                     /ID="cds-AAG48591.1"
-                     /Dbxref="NCBI_GP:AAG48591.1"
-                     /Name="_replicase_polyprotein_1ab"
-                     /gbkey="CDS"
-                     /product="replicase polyprotein 1ab"
-                     /protein_id="AAG48591.1"
-                     /locus_tag="_replicase_polyprotein_1ab"
+     CDS             293..625
+                     /ID="id-NP_073549.1:1..111"
+                     /Note="PL1-PRO cleavage product"
+                     /gbkey="Prot"
+                     /product="leader protein p9"
+                     /protein_id="NP_835344.1"
+                     /Name="leader_p9"
+                     /locus_tag="leader_p9"
+     CDS             626..2983
+                     /ID="id-NP_073549.1:112..897"
+                     /Note="counterpart of MHV p65"
+                     /gbkey="Prot"
+                     /product="p87"
+                     /protein_id="NP_835357.1"
+                     /Name="p87"
+                     /locus_tag="p87"
+     CDS             2984..7744
+                     /ID="id-NP_073549.1:898..2484"
+                     /Note="contains papain-like proteinase 1 domain
+                     (PL1-PRO)%2C papain-like proteinase 2 domain (PL2-PRO)%2C
+                     predicted phosphoesterase (similar to the Appr-1'-p
+                     processing enzyme)%2C and putative metal- and membrane
+                     binding Y domain"
+                     /gbkey="Prot"
+                     /product="coronavirus p195/p210 protein (nsp1)"
+                     /protein_id="NP_835345.1"
+                     /Name="nsp1"
+                     /locus_tag="nsp1"
+     CDS             7745..9187
+                     /ID="id-NP_073549.1:2485..2965"
+                     /gbkey="Prot"
+                     /product="p44"
+                     /protein_id="NP_835358.1"
+                     /Name="p44"
+                     /locus_tag="p44"
+     CDS             9188..10093
+                     /ID="id-NP_073549.1:2966..3267"
+                     /gbkey="Prot"
+                     /product="putative coronavirus nsp2 (3CL-PRO)"
+                     /protein_id="NP_835346.1"
+                     /Name="nsp2"
+                     /locus_tag="nsp2"
+     CDS             10094..10930
+                     /ID="id-NP_073549.1:3268..3546"
+                     /Note="hydrophobic domain"
+                     /gbkey="Prot"
+                     /product="putative coronavirus nsp3 (HD2)"
+                     /protein_id="NP_835347.1"
+                     /Name="nsp3"
+                     /locus_tag="nsp3"
+     CDS             10931..11179
+                     /ID="id-NP_073549.1:3547..3629"
+                     /gbkey="Prot"
+                     /product="putative coronavirus nsp4"
+                     /protein_id="NP_835348.1"
+                     /Name="nsp4"
+                     /locus_tag="nsp4"
+     CDS             11180..11764
+                     /ID="id-NP_073549.1:3630..3824"
+                     /gbkey="Prot"
+                     /product="putative coronavirus nsp5"
+                     /protein_id="NP_835349.1"
+                     /Name="nsp5"
+                     /locus_tag="nsp5"
+     CDS             11765..12091
+                     /ID="id-NP_073549.1:3825..3933"
+                     /gbkey="Prot"
+                     /product="putative coronavirus nsp6"
+                     /protein_id="NP_835350.1"
+                     /Name="nsp6"
+                     /locus_tag="nsp6"
+     CDS             join(12497..12520,12520..15276)
+                     /ID="id-NP_073549.1:4069..4995"
+                     /gbkey="Prot"
+                     /product="rdrp"
+                     /protein_id="NP_835352.1"
+                     /Name="rdrp"
+                     /locus_tag="rdrp"
+     CDS             15277..17067
+                     /ID="id-NP_073549.1:4996..5592"
+                     /Note="metal-binding domain%2C NTPase/helicase domain"
+                     /gbkey="Prot"
+                     /product="putative coronavirus nsp10 (MB%2C NTPase/HEL)"
+                     /protein_id="NP_835353.1"
+                     /Name="nsp10"
+                     /locus_tag="nsp10"
+     CDS             17068..18621
+                     /ID="id-NP_073549.1:5593..6110"
+                     /gbkey="Prot"
+                     /product="putative coronavirus nsp11"
+                     /protein_id="NP_835354.1"
+                     /Name="nsp11"
+                     /locus_tag="nsp11"
+     CDS             18622..19665
+                     /ID="id-NP_073549.1:6111..6458"
+                     /gbkey="Prot"
+                     /product="putative coronavirus nsp12"
+                     /protein_id="NP_835355.1"
+                     /Name="nsp12"
+                     /locus_tag="nsp12"
+     CDS             19666..20565
+                     /ID="id-NP_073549.1:6459..6758"
+                     /gbkey="Prot"
+                     /product="putative coronavirus nsp13"
+                     /protein_id="NP_835356.1"
+                     /Name="nsp13"
+                     /locus_tag="nsp13"
      CDS             293..12550
-                     /ID="cds-AAG48590.1"
-                     /Dbxref="NCBI_GP:AAG48590.1"
-                     /Name="_replicase_polyprotein_1a"
+                     /ID="cds-NP_073550.1"
+                     /Dbxref="GenBank:NP_073550.1,GeneID:918764"
+                     /Name="replicase_polyprotein_1a"
                      /gbkey="CDS"
+                     /locus_tag="replicase_polyprotein_1a"
                      /product="replicase polyprotein 1a"
-                     /protein_id="AAG48590.1"
-                     /locus_tag="_replicase_polyprotein_1a"
+                     /protein_id="NP_073550.1"
      CDS             20570..24091
-                     /ID="cds-AAG48592.1"
-                     /Dbxref="NCBI_GP:AAG48592.1"
-                     /Name="spike_protein"
+                     /ID="cds-NP_073551.1"
+                     /Dbxref="GenBank:NP_073551.1,GeneID:918758"
+                     /Name="spike"
                      /gbkey="CDS"
                      /gene="S"
-                     /product="spike glycoprotein"
-                     /protein_id="AAG48592.1"
-                     /locus_tag="spike_protein"
+                     /locus_tag="spike"
+                     /product="spike"
+                     /protein_id="NP_073551.1"
      CDS             24091..24492
-                     /ID="cds-AAG48593.1"
-                     /Dbxref="NCBI_GP:AAG48593.1"
-                     /Name="4a_protein"
+                     /ID="cds-NP_073552.1"
+                     /Dbxref="GenBank:NP_073552.1,GeneID:918759"
+                     /Name="4a"
                      /gbkey="CDS"
                      /gene="4a"
+                     /locus_tag="4a"
                      /product="4a protein"
-                     /protein_id="AAG48593.1"
-                     /locus_tag="4a_protein"
+                     /protein_id="NP_073552.1"
      CDS             24482..24748
-                     /ID="cds-AAG48594.1"
-                     /Dbxref="NCBI_GP:AAG48594.1"
-                     /Name="4b_protein"
+                     /ID="cds-NP_073553.1"
+                     /Dbxref="GenBank:NP_073553.1,GeneID:918760"
+                     /Name="4b"
                      /gbkey="CDS"
                      /gene="4b"
+                     /locus_tag="4b"
                      /product="4b protein"
-                     /protein_id="AAG48594.1"
-                     /locus_tag="4b_protein"
+                     /protein_id="NP_073553.1"
      CDS             24750..24983
-                     /ID="cds-AAG48595.1"
-                     /Dbxref="NCBI_GP:AAG48595.1"
-                     /Name="envelope_protein"
+                     /ID="cds-NP_073554.1"
+                     /Dbxref="GenBank:NP_073554.1,GeneID:918761"
+                     /Name="envelope"
                      /Note="structural protein%3B E protein"
                      /gbkey="CDS"
                      /gene="E"
+                     /locus_tag="envelope"
                      /product="envelope protein"
-                     /protein_id="AAG48595.1"
-                     /locus_tag="envelope_protein"
+                     /protein_id="NP_073554.1"
      CDS             24995..25672
-                     /ID="cds-AAG48596.1"
-                     /Dbxref="NCBI_GP:AAG48596.1"
-                     /Name="membrane_protein"
+                     /ID="cds-NP_073555.1"
+                     /Dbxref="GenBank:NP_073555.1,GeneID:918762"
+                     /Name="membrane"
                      /gbkey="CDS"
                      /gene="M"
+                     /locus_tag="membrane"
                      /product="membrane protein"
-                     /protein_id="AAG48596.1"
-                     /locus_tag="membrane_protein"
+                     /protein_id="NP_073555.1"
      CDS             25686..26855
-                     /ID="cds-AAG48597.1"
-                     /Dbxref="NCBI_GP:AAG48597.1"
-                     /Name="nucleocapsid_protein"
+                     /ID="cds-NP_073556.1"
+                     /Dbxref="GenBank:NP_073556.1,GeneID:918763"
+                     /Name="nucleocapsid"
                      /gbkey="CDS"
                      /gene="N"
+                     /locus_tag="nucleocapsid"
                      /product="nucleocapsid protein"
-                     /protein_id="AAG48597.1"
-                     /locus_tag="nucleocapsid_protein"
+                     /protein_id="NP_073556.1"
 ORIGIN
         1 acttaagtac cttatctatc tacagataga aaagttgctt tttagacttt gtgtctactt
        61 ttctcaacta aacgaaattt ttgctatggc cggcatcttt gatgctggag tcgtagtgta
