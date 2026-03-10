@@ -7,6 +7,9 @@
 # snakemake auspice/HCoV_229E_genome.json --cores 9
 
 ###############
+
+configfile: "config/config.yaml"
+
 wildcard_constraints:
     seg="spike|nucleocapsid|envelope|membrane|whole-genome"  
 
@@ -15,9 +18,12 @@ segments = ["spike", "nucleocapsid", "envelope", "membrane", "whole-genome"] # T
 
 # Expand augur JSON paths
 rule all:
-    input:
-        #augur_jsons = expand("auspice/HCoV_229E_{segs}.json", segs=segments) ## TODO: replace <your_virus> with actual virus name (Ctrl+H)
-        augur_jsons = expand("auspice/HCoV_229E_{segs}.json", segs=segments) ## TODO: replace <your_virus> with actual virus name (Ctrl+H)
+    input: 
+        augur_jsons = expand("auspice/HCoV_229E_{segs}.json", segs=segments) 
+
+#Segments with clades 
+CLADES_SEGMENTS = {"whole-genome"}
+
 
 ##############################
 # Rule to handle input and config files
@@ -39,6 +45,8 @@ rule files:
         
 
 files = rules.files.input
+
+
 
 ##############################
 # Download from NBCI Virus with ingest snakefile
@@ -165,8 +173,8 @@ rule blast_sort:
         blast_length= "{seg}/results/blast_{seg}_length.tsv"
     params:
         range = "{seg}",  # Determines which protein (or whole genome) is processed
-        min_length = lambda wildcards: {"spike": 2113, "nucleocapsid": 701, "envelope": 139, "membrane": 406, "whole-genome": 16400}[wildcards.seg],  # Min length 
-        max_length = lambda wildcards: {"spike": 3600, "nucleocapsid": 1175, "envelope": 240, "membrane": 700, "whole-genome": 27400}[wildcards.seg]  # Max length added 50-100 to actual length
+        min_length = lambda wildcards: config[wildcards.seg]["length"]["min_length"], # Min length 
+        max_length = lambda wildcards: config[wildcards.seg]["length"]["max_length"], # Max length added 100 to actual length
     shell:
         """
         python scripts/blast_sort.py --blast {input.blast_result} \
@@ -328,12 +336,11 @@ rule refine:
         tree = "{seg}/results/tree.nwk",
         node_data = "{seg}/results/branch_lengths.json"
     params:
-        coalescent = "opt",
-        date_inference = "marginal",
-        clock_filter_iqd = 3, # set to 6 if you want more control over outliers
-        strain_id_field ="accession",
-        #clock_rate = 0.000120, # remove for estimation by augur; check literature
-        #clock_std_dev = 0.00005
+        coalescent = lambda wildcards: config[wildcards.seg]["augur_refine"]["coalescent"],
+        date_inference = lambda wildcards: config[wildcards.seg]["augur_refine"]["date_inference"],
+        clock_filter_iqd = lambda wildcards: config[wildcards.seg]["augur_refine"]["clock_filter_iqd"],
+        strain_id_field = lambda wildcards: config[wildcards.seg]["augur_refine"]["strain_id_field"],
+        rooting = lambda wildcards: config[wildcards.seg]["augur_refine"]["rooting"],
 
     shell:
         """
@@ -422,6 +429,7 @@ rule traits:
 # ##############################
 # # Assign clades or subgenotypes based on list provided
 # ###############################
+
 rule clades: 
     message: "Assigning clades according to nucleotide mutations"
     input:
@@ -452,7 +460,7 @@ rule export:
         traits = rules.traits.output.node_data,
         nt_muts = rules.ancestral.output.node_data,
         aa_muts = rules.translate.output.node_data,
-        clades = rules.clades.output.clade_data,
+        clades = lambda wc: f"{wc.seg}/results/clades.json" if wc.seg in CLADES_SEGMENTS else [],
         colors = files.colors,
         lat_longs = files.lat_longs,
         auspice_config = files.auspice_config

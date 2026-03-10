@@ -1,0 +1,80 @@
+#Pre-set parameters to be used in the workflow for each gene or whole genome build 
+#For each gene, provide the following parameter values: 
+#length: 
+  #min_length: the minimumum sequence length required after blast
+  #max_length: the mmaximum sequence length required for after blast
+
+#augur_refine: 
+  # coalescent:"opt",
+  # date_inference: "marginal",
+  # clock_filter_iqd: # set to 6 if you want more control over outliers
+  # strain_id_field: "accession",
+  # rooting: "mid_point"
+  # clock_rate: 0.004, # remove for estimation by augur; check literature
+  # clock_std_dev: 0.0015
+
+spike:
+  length:
+    min_length: 2113
+    max_length: 3600
+  augur_refine:
+    coalescent: "opt"
+    date_inference: "marginal"
+    clock_filter_iqd: 3
+    strain_id_field: "accession"
+    rooting: "least-squares"
+
+nucleocapsid:
+  length:
+    min_length: 701
+    max_length: 1175
+  augur_refine:
+    coalescent: "opt"
+    date_inference: "marginal"
+    clock_filter_iqd: 3
+    strain_id_field: "accession"
+    rooting: "least-squares"
+
+envelope:
+  length:
+    min_length: 139
+    max_length: 240
+  augur_refine:
+    coalescent: "opt"
+    date_inference: "marginal"
+    clock_filter_iqd: 3
+    strain_id_field: "accession"
+    rooting: "least-squares"
+
+membrane:
+  length:
+    min_length: 406
+    max_length: 700
+  augur_refine:
+    coalescent: "opt"
+    date_inference: "marginal"
+    clock_filter_iqd: 3
+    strain_id_field: "accession"
+    rooting: "best"
+
+whole-genome:
+  length:
+    min_length: 16400
+    max_length: 27400
+  augur_refine:
+    coalescent: "opt"
+    date_inference: "marginal"
+    clock_filter_iqd: 3
+    strain_id_field: "accession"
+    rooting: "best"
+
+rdrp:
+  length:
+    min_length: 500
+    max_length: 2800
+  augur_refine:
+    coalescent: "opt"
+    date_inference: "marginal"
+    clock_filter_iqd: 3
+    strain_id_field: "accession"
+    rooting: "best"

@@ -34,4 +34,8 @@ PQ243243 #archived clinical sample propagated in lab for assays
 PP914108 #unverified
 OK662398 #propagated in Huh-7 cells in Helsink/Turku group paper 
 OK662397 #propagated in Huh-7 cells in Helsink/Turku group paper 
-PQ616082 #cell culture
+PQ616082 #cell 
+
+#highly diverged from rest of samples
+PX640306
+PX640307
