@@ -8,10 +8,10 @@
 
 ###############
 wildcard_constraints:
-    seg="spike|nucleocapsid|envelope|membrane|rdrp|whole-genome"  
+    seg="spike|nucleocapsid|envelope|membrane|whole-genome"  
 
 # Define segments to analyze
-segments = ["spike", "nucleocapsid", "envelope", "membrane", "rdrp", "whole-genome"] # This is only for the expand in rule all
+segments = ["spike", "nucleocapsid", "envelope", "membrane", "whole-genome"] # This is only for the expand in rule all
 
 # Expand augur JSON paths
 rule all:
@@ -35,10 +35,9 @@ rule files:
         published_clades =  "config/published_clades.xlsx",
         regions=            "config/geo_regions.tsv",
         metadata=           "data/metadata.tsv",
-        extended_metadata=  "data/ghana_seq_metadata.xlsx", 
-        unpublished_sequences= "data/ghana_229E.fasta", 
+        extended_metadata=  "data/unpublished_seq_metadata.xlsx", 
+        unpublished_sequences= "data/unpublished_229e.fasta",
         updated_dates = "data/updated_dates.xlsx",
-        
 
 files = rules.files.input
 
@@ -192,8 +191,8 @@ rule blast_sort:
         blast_length= "{seg}/results/blast_{seg}_length.tsv"
     params:
         range = "{seg}",  # Determines which protein (or whole genome) is processed
-        min_length = lambda wildcards: {"spike": 2113, "nucleocapsid": 701, "envelope": 139, "membrane": 406, "rdrp": 500, "whole-genome": 16400}[wildcards.seg],  # Min length 
-        max_length = lambda wildcards: {"spike": 3600, "nucleocapsid": 1175, "envelope": 240, "membrane": 700, "rdrp": 2800, "whole-genome": 27400}[wildcards.seg]  # Max length added 50-100 to actual length
+        min_length = lambda wildcards: {"spike": 2113, "nucleocapsid": 701, "envelope": 139, "membrane": 406, "whole-genome": 16400}[wildcards.seg],  # Min length 
+        max_length = lambda wildcards: {"spike": 3600, "nucleocapsid": 1175, "envelope": 240, "membrane": 700, "whole-genome": 27400}[wildcards.seg]  # Max length added 50-100 to actual length
     shell:
         """
         python scripts/blast_sort.py --blast {input.blast_result} \
@@ -309,31 +308,6 @@ rule align:
         --output-fasta {output.alignment} \
         --output-tsv {output.tsv}
         """
-###########################
-#Masking if needed
-###########################
-
-rule mask:
-    message:
-            """
-            Masking sequences outside derised regions
-            """
-    input:
-        alignment = rules.align.output.alignment,
-        
-    output:
-        masked_alignment = "{seg}/results/mask_aligned.fasta",
-
-    params:
-          
-    shell:
-        """
-        augur mask \
-            --sequences {input.alignment} \
-            --mask-from-beginning 1779 \
-            --mask-from-end 360 \
-            --output {output.masked_alignment}
-        """
 
 
 
@@ -347,7 +321,7 @@ rule tree:
         Creating a maximum likelihood tree
         """
     input:
-        alignment = rules.mask.output.masked_alignment
+        alignment = rules.align.output.alignment
 
     output:
         tree = "{seg}/results/tree_raw.nwk"
@@ -388,6 +362,7 @@ rule refine:
         strain_id_field ="accession",
         # clock_rate = 0.000120, # remove for estimation by augur; check literature
         # clock_std_dev = 0.00005
+        
 
     shell:
         """
@@ -398,7 +373,6 @@ rule refine:
             --metadata-id-columns {params.strain_id_field} \
             --output-tree {output.tree} \
             --output-node-data {output.node_data} \
-            --root NC_002645 \
             --stochastic-resolve
           
         """
