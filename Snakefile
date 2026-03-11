@@ -35,7 +35,7 @@ rule files:
         dropped_strains =   "config/dropped_strains.txt",
         reference =         "ingest/data/references/reference.gbk"    ,
         lat_longs =         "config/lat_longs.tsv",
-        auspice_config =    "{seg}/config/auspice_config.json",
+        auspice_config =    "config/auspice_config.json",
         colors =            "config/colors.tsv",
         clades =            "{seg}/config/clades_genome.tsv",
         published_clades =  "config/published_clades.xlsx",

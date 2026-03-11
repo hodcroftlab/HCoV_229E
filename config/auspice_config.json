@@ -36,6 +36,11 @@
         "title": "Published Clades",
         "type": "categorical"
       },
+       {
+        "key": "is_leipzig",
+        "title": "Leipzig Samples",
+        "type": "categorical"
+      },
       {
         "key": "length",
         "title": " Blast Sequence length",
@@ -58,7 +63,8 @@
       "country",
       "region",
       "author",
-      "published_clade"
+      "published_clade",
+      "is_leipzig"
   
     ]
   }
