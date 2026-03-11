@@ -47,11 +47,15 @@ rule fetch_ncbi_dataset_package:
         "benchmarks/fetch_ncbi_dataset_package.txt"
     shell:
         """
-        datasets download virus genome taxon {params.ncbi_taxon_id:q} \
-            --no-progressbar \
-            --filename {output.dataset_package}
+        datasets download virus genome taxon {params.ncbi_taxon_id:q} --no-progressbar --filename {output.dataset_package} ||
+        curl https://hel1.your-objectstorage.com/loculus-public/mirror/{params.ncbi_taxon_id:q}.zip -o data/ncbi_dataset.zip
+
         """
 
+        
+# datasets download virus genome taxon {params.ncbi_taxon_id:q} \
+#             --no-progressbar \
+#             --filename {output.dataset_package}
 # Note: This rule is not part of the default workflow!
 # It is intended to be used as a specific target for users to be able
 # to inspect and explore the full raw metadata from NCBI Datasets.

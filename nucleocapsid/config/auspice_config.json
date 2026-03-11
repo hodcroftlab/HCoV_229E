@@ -37,6 +37,11 @@
         "type": "categorical"
       },
       {
+        "key": "ghana_sample",
+        "title": "Ghana Samples",
+        "type": "categorical"
+      },
+      {
         "key": "length",
         "title": " Blast Sequence length",
         "type": "continuous"

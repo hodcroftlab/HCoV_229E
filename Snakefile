@@ -41,8 +41,9 @@ rule files:
         published_clades =  "config/published_clades.xlsx",
         regions=            "config/geo_regions.tsv",
         metadata=           "data/metadata.tsv",
+        extended_metadata=  "data/unpublished_seq_metadata.xlsx", 
+        unpublished_sequences= "data/unpublished_229e.fasta",
         updated_dates = "data/updated_dates.xlsx",
-        
 
 files = rules.files.input
 
@@ -100,6 +101,29 @@ rule update_strain_names:
         time bash scripts/update_strain.sh {input.file_in} {params.backup} {output.file_out}
         """
 
+
+##############################
+#Merging public data with internal sample data 
+
+###############################
+
+rule merge_sequence_files:
+    message:
+        """
+        Merging publicly available sequences with unpublished sequences"
+        """
+    input:
+        public = rules.fetch.output.sequences,
+        unpublished = files.unpublished_sequences 
+    output:
+        sequences = "results/all_sequences.fasta"
+    shell:
+        """
+        cat {input.public} {input.unpublished} > {output.sequences}
+        
+        """
+
+
 rule update_metadata:
     message: 
         """
@@ -107,6 +131,7 @@ rule update_metadata:
         """
     input: 
         public = files.metadata,
+        unpublished = files.extended_metadata,
         published_clades = files.published_clades,
         updated_dates = files.updated_dates
     output:
@@ -115,8 +140,9 @@ rule update_metadata:
         """
        python scripts/merge_tsv.py \
        --inputfile1 {input.public}\
-       --inputfile2 {input.published_clades} \
-       --inputfile3 {input.updated_dates} \
+       --inputfile2 {input.unpublished} \
+       --inputfile3 {input.published_clades} \
+       --inputfile4 {input.updated_dates} \
        --outputfile {output.final_metadata}
 
         """    
@@ -149,7 +175,7 @@ rule extract:
 rule blast:
     input: 
         blast_db_file = rules.extract.output.extracted_fasta,  # Provide a BLAST reference
-        seqs_to_blast = rules.fetch.output.sequences
+        seqs_to_blast = rules.merge_sequence_files.output.sequences
     output:
         blast_out = "{seg}/results/blast_out.csv"
     params:
@@ -167,7 +193,7 @@ rule blast:
 rule blast_sort:
     input:
         blast_result = rules.blast.output.blast_out,  # BLAST output for specific proteins
-        input_seqs = rules.fetch.output.sequences
+        input_seqs = rules.merge_sequence_files.output.sequences
     output:
         sequences = "{seg}/results/sequences.fasta",
         blast_length= "{seg}/results/blast_{seg}_length.tsv"
@@ -291,6 +317,8 @@ rule align:
         --output-tsv {output.tsv}
         """
 
+
+
 ##############################
 # Building a tree
 ###############################
@@ -344,23 +372,25 @@ rule refine:
 
     shell:
         """
-        augur refine \
+         augur refine \
             --tree {input.tree} \
             --alignment {input.alignment} \
             --metadata {input.metadata} \
             --metadata-id-columns {params.strain_id_field} \
             --output-tree {output.tree} \
             --output-node-data {output.node_data} \
-            --timetree \
-            --coalescent {params.coalescent} \
-            --date-confidence \
-            --date-inference {params.date_inference} \
-            --clock-filter-iqd {params.clock_filter_iqd}\
             --stochastic-resolve
+          
         """
-#--clock-rate {params.clock_rate} \
-            #--clock-std-dev {params.clock_std_dev} \
-            
+        # rooot NC_002645
+        #  --clock-rate {params.clock_rate} \
+            # --clock-std-dev {params.clock_std_dev} \
+            #  --timetree \
+            # --coalescent {params.coalescent} \
+            # --date-confidence \
+            # --date-inference {params.date_inference} \
+            # --clock-filter-iqd {params.clock_filter_iqd}\
+              
 # ##############################
 # # Ancestral sequences and amino acids
 # ###############################
@@ -511,6 +541,7 @@ rule clean:
     message: "Removing directories: {params}"
     params:
         "*/results/*",
+        "results/*",
         "auspice/*",
         "temp/*", 
         "data/metadata.tsv",

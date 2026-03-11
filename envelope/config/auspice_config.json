@@ -32,6 +32,11 @@
         "type": "categorical"
       },
       {
+        "key": "ghana_sample",
+        "title": "Ghana Samples",
+        "type": "categorical"
+      },
+      {
         "key": "published_clade",
         "title": "Published Clades",
         "type": "categorical"
