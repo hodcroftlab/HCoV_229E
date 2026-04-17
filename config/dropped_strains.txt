@@ -2,10 +2,10 @@
 
 #Ghana, Kenya, Tanzania - bat coronavirus isolates 
 
-#KT253269
-#KT253266
-#KT253270
-#KT253271
+KT253269
+KT253266
+KT253270
+KT253271
 
 
 #removal of these african strains drops middle eastern completley 
@@ -15,7 +15,6 @@
 #MZ712010 
 #OK625404
 
-OY757560 #Rat 
 
 #ON461751
 #ON554107
@@ -34,8 +33,61 @@ PQ243243 #archived clinical sample propagated in lab for assays
 PP914108 #unverified
 OK662398 #propagated in Huh-7 cells in Helsink/Turku group paper 
 OK662397 #propagated in Huh-7 cells in Helsink/Turku group paper 
-PQ616082 #cell 
+#PQ616082 #isolated from cell cultures - keeping because cited in multiple papers 
+PP810610
+KF293666
+KF293665
+KF293664
+KF293663
+KF293662
+KF285482
+KF285481
+KF285480
+KF285479
+KF285478
+KF285477
+KF285476
+KF285475
+KF285474
+KF285473
+KF285472
+KF285471
+KF285470
 
 #highly diverged from rest of samples
-PX640306
-PX640307
+#PX640306
+#PX640307
+
+#removal of patent sequences 
+HH977460
+GN352064
+GN352063
+GN352062
+GN352061
+GN352060
+GN352059
+GN352058
+GN352057
+GN352056
+GN352055
+GN352054
+GN352053
+FW337969
+FW337968
+DL470169
+DJ009221
+DJ009220
+DJ009219
+DJ009218
+DJ009217
+DJ009216
+DJ009215
+DJ009214
+CS123986
+CS123984
+CS123982
+CS123980
+CS123978
+CS123977
+CS123975
+CS123973

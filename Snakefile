@@ -379,17 +379,15 @@ rule refine:
             --metadata-id-columns {params.strain_id_field} \
             --output-tree {output.tree} \
             --output-node-data {output.node_data} \
+            --timetree \
+            --coalescent {params.coalescent} \
+            --date-confidence \
+            --date-inference {params.date_inference} \
+            --clock-filter-iqd {params.clock_filter_iqd}\
             --stochastic-resolve
           
         """
-        # rooot NC_002645
-        #  --clock-rate {params.clock_rate} \
-            # --clock-std-dev {params.clock_std_dev} \
-            #  --timetree \
-            # --coalescent {params.coalescent} \
-            # --date-confidence \
-            # --date-inference {params.date_inference} \
-            # --clock-filter-iqd {params.clock_filter_iqd}\
+         
               
 # ##############################
 # # Ancestral sequences and amino acids

@@ -12,7 +12,7 @@
         "type": "categorical"
       },
       {
-        "key": "num_date",
+        "key": "date",
         "title": "Date",
         "type": "continuous"
       },
